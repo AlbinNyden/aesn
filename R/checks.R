@@ -47,3 +47,14 @@ check_numeric <- function(
   }
   invisible(value_name)
 }
+
+#' Check if values are int list
+#'
+#' @param values Values to check
+#' @param check_list Values to check 'values' against
+check_values_in_list <- function(
+    values,
+    check_list) {
+
+
+}
