@@ -4,7 +4,14 @@
 \alias{logistic_regression}
 \title{Logistic regression}
 \usage{
-logistic_regression(data = NULL, y = NULL, covariates = NULL, intercept = TRUE)
+logistic_regression(
+  data = NULL,
+  y = NULL,
+  covariates = NULL,
+  intercept = TRUE,
+  max_iter = 100,
+  tol = 1e-06
+)
 }
 \arguments{
 \item{data}{Data}
@@ -13,7 +20,7 @@ logistic_regression(data = NULL, y = NULL, covariates = NULL, intercept = TRUE)
 
 \item{covariates}{The variables used as covariates}
 
-\item{intercept}{If intercept shold be included}
+\item{intercept}{If intercept should be included}
 
 \item{max_iter}{Maximum number of iterations}
 

@@ -47,6 +47,7 @@ linear_regression <- function(
 
   # RSS
   rss <- sum(res^2)
+  rss_mean <- mean(res^2)
 
   # Residual variance
   sigma2 <- rss / df_residual
@@ -82,7 +83,7 @@ linear_regression <- function(
     (n - 1) / df_residual
 
   #Output
-  list(
+  model <-list(
     "model" = "linear_regression",
     "coefficients" = list(
       "vector" = beta,
@@ -93,8 +94,50 @@ linear_regression <- function(
     "statistics" = list(
       "r_squared" = r_squared,
       "adjusted_r_squared" = adjusted_r_squared,
-      "residual_sum_of_squares" = rss
+      "residual_sum_of_squares" = rss,
+      "mean_residual_sum_of_squares" = rss_mean
     )
   )
 
+  class(model) <- "aesn_linear_regression"
+
+  model
+
 }
+
+#' Print summary for Linear regression
+#'
+#' Function printing the summary of the fitted model
+#'
+#' @param object aesn_linear_regression
+#'
+#' @export
+print.aesn_linear_regression <- function(model, ...) {
+
+  #Prettify print data frame
+  df_print <- model$coefficients$data_frame
+  df_print$p_value <- ifelse(
+    df_print$p_value <= 0.05,
+    paste0(df_print$p_value, "*"),
+    paste0(df_print$p_value)
+  )
+  colnames(df_print) <- c("Variable", "Coefficient",
+                          "t value", "std. error", "p-value")
+
+  cat("Linear Regression\n")
+  cat("===================\n\n")
+  print.data.frame(df_print, row.names = FALSE)
+  cat("\n")
+  cat("(* implies a p-value less than 0.05)\n")
+  cat("===== Goodness of fit ===== \n\n")
+  cat(paste0("R squared: ",
+             round(model$statistics$r_squared, 3),
+             "\n"))
+  cat(paste0("Adjusted R squared: ",
+             round(model$statistics$adjusted_r_squared, 3),
+             "\n"))
+  cat(paste0("Mean of sum of square of residuals: ",
+             round(model$statistics$mean_residual_sum_of_squares, 3),
+             "\n"))
+}
+
