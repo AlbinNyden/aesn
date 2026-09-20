@@ -27,7 +27,7 @@ check_vars_exist <- function(
     missing_vars <- vars[!vars %in% names(data)]
     missing_vars <- paste0(missing_vars, "\n")
     stop(
-      paste0("Follwing variables not found in data: ",
+      paste0("Follwing variables not found in data: \n",
              missing_vars),
       call. = FALSE
     )
@@ -48,7 +48,7 @@ check_numeric <- function(
   invisible(value_name)
 }
 
-#' Check if values are int list
+#' Check if values are in list
 #'
 #' @param values Values to check
 #' @param check_list Values to check 'values' against
@@ -56,5 +56,15 @@ check_values_in_list <- function(
     values,
     check_list) {
 
+  non_in_check_list <- values[!(values %in% check_list)]
+  if (length(non_in_check_list) > 0) {
+    stop(
+      paste0("The following values: \n",
+             paste0(non_in_check_list, collapse = "\n"),
+             "\nare not in\n",
+             paste0(check_list, collapse = "\n")),
+      call. = FALSE
+    )
+  }
 
 }

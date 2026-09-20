@@ -3,3 +3,4 @@
 S3method(print,aesn_linear_regression)
 export(linear_regression)
 export(logistic_regression)
+export(normality_test)

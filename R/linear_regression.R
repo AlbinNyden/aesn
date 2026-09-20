@@ -82,6 +82,12 @@ linear_regression <- function(
     1 - (1 - r_squared) *
     (n - 1) / df_residual
 
+  # Normality of residuals
+  res_norm_test <- normality_test(
+    res,
+    tests = c("shapiro_wilk", "jarque_bera")
+  )
+
   #Output
   model <-list(
     "model" = "linear_regression",
@@ -96,7 +102,8 @@ linear_regression <- function(
       "adjusted_r_squared" = adjusted_r_squared,
       "residual_sum_of_squares" = rss,
       "mean_residual_sum_of_squares" = rss_mean
-    )
+    ),
+    "normality_of_residuals" = res_norm_test
   )
 
   class(model) <- "aesn_linear_regression"
@@ -139,5 +146,13 @@ print.aesn_linear_regression <- function(model, ...) {
   cat(paste0("Mean of sum of square of residuals: ",
              round(model$statistics$mean_residual_sum_of_squares, 3),
              "\n"))
+  cat("\n")
+  cat("===== Model assumptions =====\n")
+  cat("--- Normality of residuals ---\n")
+  cat(paste0("Shapiro-Wilk: ",
+             "W = ",
+             round(model$normality_of_residuals$shapiro_wilk$W, 3),
+             ", p-value = ",
+             model$normality_of_residuals$shapiro_wilk$p_value))
 }
 
