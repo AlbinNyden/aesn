@@ -19,7 +19,10 @@ linear_regression <- function(
   check_vars_exist(data = data, vars = unique(c(y, covariates)))
   check_numeric(data[,y])
 
-  #TODO handle missing values
+  #Handle missing values
+  missing_value_summary <- get_missing_summary(data[c(y, covariates)])
+  n_row_orig <- nrow(data)
+  data <- na.omit(data[c(y, covariates)])
 
   #Create matrix model
   X <- create_model_matrix(data[covariates],
@@ -66,7 +69,7 @@ linear_regression <- function(
   beta_df$std_error <- unname(std_error)
 
   # p-values
-  p_value <- 2 * pt(
+  p_value <- 2 * stats::pt(
     abs(t_value),
     df = df_residual,
     lower.tail = FALSE
@@ -103,7 +106,12 @@ linear_regression <- function(
       "residual_sum_of_squares" = rss,
       "mean_residual_sum_of_squares" = rss_mean
     ),
-    "normality_of_residuals" = res_norm_test
+    "normality_of_residuals" = res_norm_test,
+    "data_quality" = list(
+      "missing_value_summary" = missing_value_summary,
+      "original_size" = n_row_orig,
+      "rows_removed" = n_row_orig - n
+    )
   )
 
   class(model) <- "aesn_linear_regression"
@@ -154,5 +162,15 @@ print.aesn_linear_regression <- function(model, ...) {
              round(model$normality_of_residuals$shapiro_wilk$W, 3),
              ", p-value = ",
              model$normality_of_residuals$shapiro_wilk$p_value))
+  cat("\n\n")
+  cat("===== Data quality =====\n")
+  cat(paste0(model$data$rows_removed,
+             " (",
+             model$data$rows_removed / model$data$original_size,
+             "%) rows removed due to missing values"))
+  cat("\n")
+  cat("--- Missing values ---\n")
+  print.data.frame(as.data.frame(model$data$missing_value_summary),
+                   row.names = FALSE)
 }
 

@@ -17,9 +17,9 @@ create_model_matrix <- function(
   rhs <- paste(names(data), collapse = " + ")
 
   formula <- if (intercept) {
-    as.formula(paste0("~", rhs))
+    stats::as.formula(paste0("~", rhs))
   } else {
-    as.formula(paste0("~ 0 +", rhs))
+    stats::as.formula(paste0("~ 0 +", rhs))
   }
 
   stats::model.matrix(formula, data = data)

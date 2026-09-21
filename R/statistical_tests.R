@@ -41,7 +41,7 @@ normality_test <- function(
     JB <- n / 6 *
       (skewness^2 + (kurtosis - 3)^2 / 4)
 
-    p <- pchisq(
+    p <- stats::pchisq(
       JB,
       df = 2,
       lower.tail = FALSE
